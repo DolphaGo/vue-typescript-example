@@ -13,6 +13,7 @@ import Vue from "vue";
 import ToolBar from "./components/ToolBar.vue";
 import Spinner from "./components/Spinner.vue";
 import bus from "./utils/bus";
+import { MutationTypes } from "./store/mutations";
 
 export default Vue.extend({
   components: {
@@ -35,6 +36,7 @@ export default Vue.extend({
   created() {
     // this.$store.state. // 여기서부터 추론이 되지 않는 문제 발생(state가 any인 경우)
     this.$store.state.news;
+    this.$store?.commit(MutationTypes.SET_NEWS);
     bus.$on("on:progress", this.onProgress);
     bus.$on("off:progress", this.offProgress);
   },
