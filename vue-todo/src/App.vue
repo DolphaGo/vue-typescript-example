@@ -1,20 +1,42 @@
 <template>
   <div>
-    <h1>Vue Todo with Typescript</h1>
-    <todo-input
-      :item="todoText"
-      @DolphaGo="updateTodoText"
-      @add="addTodoItem"
-    ></todo-input>
+    <header>
+      <h1>Vue Todo with Typescript</h1>
+    </header>
+    <main>
+      <TodoInput
+        :item="todoText"
+        @DolphaGo="updateTodoText"
+        @add="addTodoItem"
+      ></TodoInput>
+      <div>
+        <ul>
+          <TodoListItem></TodoListItem>
+          <!-- <li>아이템 1</li>
+          <li>아이템 2</li>
+          <li>아이템 3</li> -->
+        </ul>
+      </div>
+    </main>
   </div>
 </template>
 
 <script lang="ts">
 import Vue from "vue";
 import TodoInput from "./components/TodoInput.vue";
+import TodoListItem from "./components/TodoListItem.vue";
+
+const STORAGE_KEY = "vue-todo-ts-v1";
+const storage = {
+  fetch() {
+    const todoItems = localStorage.getItem(STORAGE_KEY) || []; // null 인경우 빈 배열 리턴
+    const result = JSON.parse(todoItems); // json string을 객체로 변환해줌
+    return result;
+  },
+};
 
 export default Vue.extend({
-  components: { TodoInput },
+  components: { TodoInput, TodoListItem },
 
   data() {
     return {
