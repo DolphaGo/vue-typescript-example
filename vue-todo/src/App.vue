@@ -11,7 +11,11 @@
       ></TodoInput>
       <div>
         <ul>
-          <TodoListItem></TodoListItem>
+          <TodoListItem
+            v-for="(todoItem, index) in todoItems"
+            :key="index"
+            :todoItem="todoItem"
+          ></TodoListItem>
           <!-- <li>아이템 1</li>
           <li>아이템 2</li>
           <li>아이템 3</li> -->
@@ -28,8 +32,12 @@ import TodoListItem from "./components/TodoListItem.vue";
 
 const STORAGE_KEY = "vue-todo-ts-v1";
 const storage = {
+  save(todoItems: any[]) {
+    const parsed = JSON.stringify(todoItems); // 배열을 string으로 만들어주자.
+    localStorage.setItem(STORAGE_KEY, parsed);
+  },
   fetch() {
-    const todoItems = localStorage.getItem(STORAGE_KEY) || []; // null 인경우 빈 배열 리턴
+    const todoItems = localStorage.getItem(STORAGE_KEY) || "[]"; // null 인경우 빈 배열 리턴
     const result = JSON.parse(todoItems); // json string을 객체로 변환해줌
     return result;
   },
@@ -41,6 +49,7 @@ export default Vue.extend({
   data() {
     return {
       todoText: "",
+      todoItems: [] as any[],
     };
   },
   methods: {
@@ -49,12 +58,20 @@ export default Vue.extend({
     },
     addTodoItem() {
       const value = this.todoText;
-      localStorage.setItem(value, value);
+      this.todoItems.push(value);
+      storage.save(this.todoItems);
+      //   localStorage.setItem(value, value);
       this.initTodoText();
     },
     initTodoText() {
       this.todoText = "";
     },
+    fetchTodoItems() {
+      this.todoItems = storage.fetch();
+    },
+  },
+  created() {
+    this.fetchTodoItems();
   },
 });
 </script>
