@@ -6,7 +6,7 @@
     <main>
       <TodoInput
         :item="todoText"
-        @DolphaGo="updateTodoText"
+        @input="updateTodoText"
         @add="addTodoItem"
       ></TodoInput>
       <div>
@@ -14,7 +14,9 @@
           <TodoListItem
             v-for="(todoItem, index) in todoItems"
             :key="index"
+            :index="index"
             :todoItem="todoItem"
+            @remove="removeTodoItem"
           ></TodoListItem>
           <!-- <li>아이템 1</li>
           <li>아이템 2</li>
@@ -68,6 +70,11 @@ export default Vue.extend({
     },
     fetchTodoItems() {
       this.todoItems = storage.fetch();
+    },
+    removeTodoItem(index: number) {
+      console.log("remove", index);
+      this.todoItems.splice(index, 1); // index 위치 1개 지우기
+      storage.save(this.todoItems);
     },
   },
   created() {

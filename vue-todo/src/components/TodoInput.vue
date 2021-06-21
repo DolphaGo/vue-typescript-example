@@ -25,9 +25,13 @@ export default Vue.extend({
       //     return;
       //   }
       const eventTarget = event.target as HTMLInputElement;
-      this.$emit("DolphaGo", eventTarget.value); // 여기서의 "Input"("DolphaGo"로 변경) 이벤트는 컴포넌트간에 대화하기 위한 수단임 -> 받는 쪽에서 @input(@DolphaGo)로 받아서 처리
+      this.$emit("input", eventTarget.value); // 여기서의 "Input"("DolphaGo"로 변경) 이벤트는 컴포넌트간에 대화하기 위한 수단임 -> 받는 쪽에서 @input(@DolphaGo)로 받아서 처리
     },
     addTodo() {
+      if (this.item == "") {
+        alert("값이 없어요~");
+        return;
+      }
       this.$emit("add");
     },
   },
