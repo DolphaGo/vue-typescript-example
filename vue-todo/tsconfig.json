@@ -2,7 +2,8 @@
   "compilerOptions": {
     "target": "esnext",
     "module": "esnext",
-    "strict": true,
+    "strict": true, // strict가 true라면 noImplicitAny도 true가 된다.
+    // "noImplicitAny": true, // 기본값은 false
     "jsx": "preserve",
     "importHelpers": true,
     "moduleResolution": "node",
