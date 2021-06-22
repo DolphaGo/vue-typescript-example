@@ -39,7 +39,7 @@ const storage = {
     const parsed = JSON.stringify(todoItems); // 배열을 string으로 만들어주자.
     localStorage.setItem(STORAGE_KEY, parsed);
   },
-  fetch() {
+  fetch(): Todo[] {
     const todoItems = localStorage.getItem(STORAGE_KEY) || "[]"; // null 인경우 빈 배열 리턴
     const result = JSON.parse(todoItems); // json string을 객체로 변환해줌
     return result;
@@ -82,7 +82,17 @@ export default Vue.extend({
       this.todoText = "";
     },
     fetchTodoItems() {
-      this.todoItems = storage.fetch();
+      //   axios.get("todos");
+      this.todoItems = storage.fetch().sort((a, b) => {
+        // 물론 (a:Todo, b:Todo) 라고 할 수 도 있겠지만, 이보다는 fetch의 결과로 Todo[] 를 리턴함을 표현해주는 것이 더 좋다.
+        if (a.title < b.title) {
+          return -1;
+        }
+        if (a.title > b.title) {
+          return 1;
+        }
+        return 0;
+      });
     },
     removeTodoItem(index: number) {
       console.log("remove", index);
