@@ -1,8 +1,8 @@
 import Vue from 'vue';
-import VueRouter from 'vue-router';
+import VueRouter, { NavigationGuardNext, Route } from 'vue-router';
 import { ItemView, UserView } from '../views';
 import createListView from '../views/CreateListView';
-import bus from '../utils/bus.js';
+import bus from '../utils/bus';
 import store from '../store/index.js';
 
 Vue.use(VueRouter);
@@ -12,13 +12,13 @@ export default new VueRouter({
   routes: [
     {
       path: '/',
-      redirect: '/news' 
+      redirect: '/news'
     },
     {
       path: '/news',
       name: 'news',
       component: createListView('NewsView'),
-      beforeEnter(routeTo, routeFrom, next) {
+      beforeEnter(routeTo : Route, routeFrom : Route, next: NavigationGuardNext<Vue>) {
         bus.$emit('on:progress');
         store.dispatch('FETCH_LIST', routeTo.name)
           .then(() => next())
@@ -55,7 +55,7 @@ export default new VueRouter({
         const itemId = routeTo.params.id;
         store.dispatch('FETCH_ITEM', itemId)
           .then(() => next())
-          .catch(err => new Error('failed to fetch item details', err));
+          .catch(err => new Error('failed to fetch item details'));
       },
     },
     {
@@ -66,7 +66,7 @@ export default new VueRouter({
         const itemId = routeTo.params.id;
         store.dispatch('FETCH_USER', itemId)
           .then(() => next())
-          .catch(err => new Error('failed to fetch user profile', err));
+          .catch(err => new Error('failed to fetch user profile')); // 자바스크립트의 특성상 new Error('failed to fetch user profile', err)로 잘 못 작성한 것도 ts는 잡아준다.
       },
     }
   ]
