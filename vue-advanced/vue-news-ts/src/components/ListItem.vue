@@ -28,28 +28,40 @@
           }}</router-link>
         </small>
         <small v-if="news.time_ago" class="link-text">
-          {{ news.time_ago }}
+          <!-- {{ news.time_ago.concat(", 2021") }} -->
+          {{ timeAgo(news) }}
         </small>
       </div>
     </li>
   </ul>
 </template>
 
-<script>
-export default {
+<script lang="ts">
+import { NewsItem } from "@/api";
+import Vue, { PropType } from "vue";
+export default Vue.extend({
   props: {
     items: {
-      type: Array,
+      type: Array as PropType<NewsItem[]>, // 타입스크립트가 아니라면, import 식으로 뜬다.
       required: true,
     },
   },
 
+  methods: {
+    timeAgo(news: NewsItem): string {
+      return news.time_ago.concat(", 2021");
+    },
+  },
+
   computed: {
-    listItems() {
+    // timeAgo(): string {
+    //   return this.items[0].time_ago.concat(", 2021");
+    // },
+    listItems(): any {
       return this.$store.getters.fetchedList;
     },
   },
-};
+});
 </script>
 
 <style scoped>
