@@ -6,18 +6,13 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { fetchNews } from "@/api";
+import { fetchNews, NewsItem } from "@/api";
 import ListItem from "../components/ListItem.vue";
-import bus from "../utils/bus";
 
-export default Vue.extend({});
-</script>
-
-<script>
-export default {
+export default Vue.extend({
   data() {
     return {
-      newsItems: [],
+      newsItems: [] as NewsItem[],
     };
   },
   components: {
@@ -32,7 +27,7 @@ export default {
   created() {
     this.fetchNewsItems();
   },
-};
+});
 </script>
 
 <style>

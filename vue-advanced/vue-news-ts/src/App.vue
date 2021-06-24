@@ -33,6 +33,7 @@ export default Vue.extend({
     },
   },
   created() {
+    // this.$store.state. // 여기서부터 추론이 되지 않는 문제 발생
     bus.$on("on:progress", this.onProgress);
     bus.$on("off:progress", this.offProgress);
   },
