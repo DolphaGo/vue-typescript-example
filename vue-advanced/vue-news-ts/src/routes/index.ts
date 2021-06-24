@@ -1,73 +1,81 @@
-import Vue from 'vue';
-import VueRouter, { NavigationGuardNext, Route } from 'vue-router';
-import { ItemView, UserView } from '../views';
-import createListView from '../views/CreateListView';
-import bus from '../utils/bus';
-import store from '../store/index.js';
+import Vue from "vue";
+import VueRouter, { NavigationGuardNext, Route } from "vue-router";
+import { ItemView, UserView } from "../views";
+import createListView from "../views/CreateListView";
+import bus from "../utils/bus";
+import store from "../store/index.js";
 
 Vue.use(VueRouter);
 
 export default new VueRouter({
-  mode: 'history',
+  mode: "history",
   routes: [
     {
-      path: '/',
-      redirect: '/news'
+      path: "/",
+      redirect: "/news",
     },
     {
-      path: '/news',
-      name: 'news',
-      component: createListView('NewsView'),
-      beforeEnter(routeTo : Route, routeFrom : Route, next: NavigationGuardNext<Vue>) {
-        bus.$emit('on:progress');
-        store.dispatch('FETCH_LIST', routeTo.name)
-          .then(() => next())
-          .catch((() => new Error('failed to fetch news items')));
+      path: "/news",
+      name: "news",
+      component: createListView("NewsView"),
+      async beforeEnter(routeTo, routeFrom, next) {
+        bus.$emit("on:progress");
+        // try {
+        //   await store.dispatch("FETCH_LIST", routeTo.name);
+        //   next();
+        // } catch (error) {
+        //   new Error("failed to fetch news items");
+        // }
+        next();
       },
     },
     {
-      path: '/ask',
-      name: 'ask',
-      component: createListView('AskView'),
+      path: "/ask",
+      name: "ask",
+      component: createListView("AskView"),
       beforeEnter(routeTo, routeFrom, next) {
-        bus.$emit('on:progress');
-        store.dispatch('FETCH_LIST', routeTo.name)
+        bus.$emit("on:progress");
+        store
+          .dispatch("FETCH_LIST", routeTo.name)
           .then(() => next())
-          .catch((() => new Error('failed to fetch news items')));
+          .catch(() => new Error("failed to fetch news items"));
       },
     },
     {
-      path: '/jobs',
-      name: 'jobs',
-      component: createListView('JobsView'),
+      path: "/jobs",
+      name: "jobs",
+      component: createListView("JobsView"),
       beforeEnter(routeTo, routeFrom, next) {
-        bus.$emit('on:progress');
-        store.dispatch('FETCH_LIST', routeTo.name)
+        bus.$emit("on:progress");
+        store
+          .dispatch("FETCH_LIST", routeTo.name)
           .then(() => next())
-          .catch((() => new Error('failed to fetch news items')));
+          .catch(() => new Error("failed to fetch news items"));
       },
     },
     {
-      path: '/item/:id',
+      path: "/item/:id",
       component: ItemView,
       beforeEnter(routeTo, routeFrom, next) {
-        bus.$emit('on:progress');
+        bus.$emit("on:progress");
         const itemId = routeTo.params.id;
-        store.dispatch('FETCH_ITEM', itemId)
+        store
+          .dispatch("FETCH_ITEM", itemId)
           .then(() => next())
-          .catch(err => new Error('failed to fetch item details'));
+          .catch((err) => new Error("failed to fetch item details"));
       },
     },
     {
-      path: '/user/:id',
+      path: "/user/:id",
       component: UserView,
       beforeEnter(routeTo, routeFrom, next) {
-        bus.$emit('on:progress');
+        bus.$emit("on:progress");
         const itemId = routeTo.params.id;
-        store.dispatch('FETCH_USER', itemId)
+        store
+          .dispatch("FETCH_USER", itemId)
           .then(() => next())
-          .catch(err => new Error('failed to fetch user profile')); // 자바스크립트의 특성상 new Error('failed to fetch user profile', err)로 잘 못 작성한 것도 ts는 잡아준다.
+          .catch((err) => new Error("failed to fetch user profile")); // 자바스크립트의 특성상 new Error('failed to fetch user profile', err)로 잘 못 작성한 것도 ts는 잡아준다.
       },
-    }
-  ]
-})
+    },
+  ],
+});
